@@ -10,6 +10,7 @@ const partsRoutes = require('./routes/parts');
 const transactionsRoutes = require('./routes/transactions');
 const employeesRoutes = require('./routes/employees');
 const alertsRoutes = require('./routes/alerts');
+const uploadRoutes = require('./routes/upload');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -27,6 +28,9 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static files (uploaded images)
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
@@ -37,6 +41,7 @@ app.use('/api/parts', partsRoutes);
 app.use('/api/transactions', transactionsRoutes);
 app.use('/api/employees', employeesRoutes);
 app.use('/api/stock-alerts', alertsRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

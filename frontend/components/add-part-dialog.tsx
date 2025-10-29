@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { Plus, Upload } from "lucide-react"
 import type { Part } from "@/lib/types"
+import { ImageUpload } from "@/components/image-upload"
 
 interface AddPartDialogProps {
   open: boolean
@@ -30,6 +31,15 @@ export function AddPartDialog({ open, onOpenChange, onAddPart }: AddPartDialogPr
     unit: "piece",
     image_url: "",
   })
+
+  const handleImageUploadSuccess = (imageUrl: string) => {
+    setFormData({ ...formData, image_url: imageUrl })
+  }
+
+  const handleImageUploadError = (error: string) => {
+    console.error('Image upload error:', error)
+    // You could show a toast here
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -200,13 +210,11 @@ export function AddPartDialog({ open, onOpenChange, onAddPart }: AddPartDialogPr
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="image_url">Image URL (optional)</Label>
-            <Input
-              id="image_url"
-              type="url"
-              value={formData.image_url}
-              onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-              placeholder="https://example.com/image.jpg"
+            <Label>Part Image (optional)</Label>
+            <ImageUpload
+              onUploadSuccess={handleImageUploadSuccess}
+              onUploadError={handleImageUploadError}
+              className="w-full"
             />
           </div>
 

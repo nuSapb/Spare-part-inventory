@@ -204,3 +204,33 @@ export const alertsApi = {
     if (!response.ok) throw new Error('Failed to delete alert');
   },
 };
+
+// Image Upload API
+export const uploadApi = {
+  uploadImage: async (file: File, partId: number): Promise<any> => {
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('partId', partId.toString());
+
+    const response = await fetch(`${API_BASE_URL}/api/upload/image`, {
+      method: 'POST',
+      body: formData,
+    });
+    if (!response.ok) throw new Error('Failed to upload image');
+    return response.json();
+  },
+
+  deleteImage: async (partId: number): Promise<any> => {
+    const response = await fetch(`${API_BASE_URL}/api/upload/image/${partId}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) throw new Error('Failed to delete image');
+    return response.json();
+  },
+
+  getImageInfo: async (partId: number): Promise<{ imageUrl: string | null }> => {
+    const response = await fetch(`${API_BASE_URL}/api/upload/image/${partId}`);
+    if (!response.ok) throw new Error('Failed to get image info');
+    return response.json();
+  },
+};
