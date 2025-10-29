@@ -4,23 +4,67 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Scan, Package, MapPin, AlertTriangle } from "lucide-react"
+import { Scan, Package, MapPin, AlertTriangle, Loader2 } from "lucide-react"
+import { useParts } from "@/contexts/parts-context"
+import { useLanguage } from "@/contexts/language-context"
+import { useToast } from "@/hooks/use-toast"
 
 export function BarcodeScanner() {
   const [scannedCode, setScannedCode] = useState("")
   const [scannedPart, setScannedPart] = useState<any>(null)
+  const [isScanning, setIsScanning] = useState(false)
+  const { t } = useLanguage()
+  const { parts, loading } = useParts()
+  const { toast } = useToast()
 
-  const handleScan = () => {
-    // Simulate scanning - in real app this would use camera API
-    const mockPart = {
-      partNumber: "10000187-A",
-      partName: "Intel Gigabit CT Adapter",
-      currentStock: 5,
-      minimumStock: 10,
-      location: "Warehouse",
-      barcodeValue: scannedCode,
+  const handleScan = async () => {
+    if (!scannedCode.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a barcode or part number",
+        variant: "destructive",
+      })
+      return
     }
-    setScannedPart(mockPart)
+
+    setIsScanning(true)
+    
+    try {
+      // Search for part by part_number or barcode
+      const foundPart = parts.find(part => 
+        part.part_number.toLowerCase().includes(scannedCode.toLowerCase()) ||
+        part.description?.toLowerCase().includes(scannedCode.toLowerCase())
+      )
+
+      if (foundPart) {
+        setScannedPart(foundPart)
+        toast({
+          title: "Success",
+          description: `Found part: ${foundPart.part_number}`,
+        })
+      } else {
+        toast({
+          title: "Not Found",
+          description: "No part found with this barcode or part number",
+          variant: "destructive",
+        })
+        setScannedPart(null)
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to search for part",
+        variant: "destructive",
+      })
+    } finally {
+      setIsScanning(false)
+    }
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleScan()
+    }
   }
 
   return (
@@ -39,10 +83,15 @@ export function BarcodeScanner() {
               placeholder="Scan or enter barcode manually"
               value={scannedCode}
               onChange={(e) => setScannedCode(e.target.value)}
+              onKeyPress={handleKeyPress}
               className="flex-1"
             />
-            <Button onClick={handleScan} disabled={!scannedCode}>
-              <Scan className="h-4 w-4 mr-2" />
+            <Button onClick={handleScan} disabled={!scannedCode || isScanning}>
+              {isScanning ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Scan className="h-4 w-4 mr-2" />
+              )}
               Scan
             </Button>
           </div>

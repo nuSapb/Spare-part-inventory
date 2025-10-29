@@ -9,15 +9,19 @@ const { getConnection, closeConnection } = require('../config/database');
 const partsRoutes = require('./routes/parts');
 const transactionsRoutes = require('./routes/transactions');
 const employeesRoutes = require('./routes/employees');
+const alertsRoutes = require('./routes/alerts');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(helmet());
+// Temporarily disable helmet to debug CORS issues
+// app.use(helmet());
 app.use(cors({
   origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(morgan('dev'));
 app.use(express.json());
@@ -32,6 +36,7 @@ app.get('/health', (req, res) => {
 app.use('/api/parts', partsRoutes);
 app.use('/api/transactions', transactionsRoutes);
 app.use('/api/employees', employeesRoutes);
+app.use('/api/stock-alerts', alertsRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -1,12 +1,19 @@
 "use client"
 
+import * as React from "react"
 import { Sidebar } from "@/components/sidebar"
 import { EmployeeList } from "@/components/employee-list"
 import { EmployeeStats } from "@/components/employee-stats"
 import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { UserPlus, Download } from "lucide-react"
+import { useLanguage } from "@/contexts/language-context"
+import { AddEmployeeDialog } from "@/components/add-employee-dialog"
 
 export default function EmployeesPage() {
+  const { t } = useLanguage()
+  const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false)
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -16,18 +23,28 @@ export default function EmployeesPage() {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Employee Management</h1>
+              <h1 className="text-3xl font-bold text-foreground">{t("employees")}</h1>
               <p className="text-muted-foreground">Manage employees and their access to the inventory system</p>
             </div>
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm">
                 <Download className="h-4 w-4 mr-2" />
-                Export
+                {t("export")}
               </Button>
-              <Button size="sm">
-                <UserPlus className="h-4 w-4 mr-2" />
-                Add Employee
-              </Button>
+              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button size="sm">
+                    <UserPlus className="h-4 w-4 mr-2" />
+                    {t("add")} {t("employees")}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>{t("add")} {t("employees")}</DialogTitle>
+                  </DialogHeader>
+                  <AddEmployeeDialog onSuccess={() => setIsAddDialogOpen(false)} />
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
 

@@ -7,21 +7,24 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Package, BarChart3, History, AlertTriangle, Settings, Menu, X, Warehouse, Scan, Users } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
+import { LanguageToggle } from "./language-toggle"
+import { useLanguage } from "@/contexts/language-context"
 
-const navigation = [
-  { name: "Dashboard", href: "/", icon: BarChart3 },
-  { name: "Parts Catalog", href: "/parts", icon: Package },
-  { name: "Stock Management", href: "/stock", icon: Warehouse },
-  { name: "Transactions", href: "/transactions", icon: History },
-  { name: "Alerts", href: "/alerts", icon: AlertTriangle },
-  { name: "Employees", href: "/employees", icon: Users },
-  { name: "Barcode Scanner", href: "/scanner", icon: Scan },
-  { name: "Settings", href: "/settings", icon: Settings },
+const navigationKeys = [
+  { key: "dashboard" as const, href: "/", icon: BarChart3 },
+  { key: "partsCatalog" as const, href: "/parts", icon: Package },
+  { key: "stockManagement" as const, href: "/stock", icon: Warehouse },
+  { key: "transactions" as const, href: "/transactions", icon: History },
+  { key: "alerts" as const, href: "/alerts", icon: AlertTriangle },
+  { key: "employees" as const, href: "/employees", icon: Users },
+  { key: "scanner" as const, href: "/scanner", icon: Scan },
+  { key: "settings" as const, href: "/settings", icon: Settings },
 ]
 
 export function Sidebar() {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
+  const { t } = useLanguage()
 
   return (
     <>
@@ -47,19 +50,22 @@ export function Sidebar() {
           <div className="flex items-center gap-2 px-6 py-4 border-b border-sidebar-border">
             <Package className="h-8 w-8 text-sidebar-primary" />
             <div className="flex-1">
-              <h1 className="text-lg font-semibold text-sidebar-foreground">SpareParts</h1>
-              <p className="text-xs text-sidebar-foreground/60">Inventory System</p>
+              <h1 className="text-lg font-semibold text-sidebar-foreground">{t("appName")}</h1>
+              <p className="text-xs text-sidebar-foreground/60">{t("appSubtitle")}</p>
             </div>
-            <ThemeToggle />
+            <div className="flex gap-1">
+              <ThemeToggle />
+              <LanguageToggle />
+            </div>
           </div>
 
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-2">
-            {navigation.map((item) => {
+            {navigationKeys.map((item) => {
               const isActive = pathname === item.href
               return (
                 <Link
-                  key={item.name}
+                  key={item.key}
                   href={item.href}
                   className={cn(
                     "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
@@ -70,7 +76,7 @@ export function Sidebar() {
                   onClick={() => setIsOpen(false)}
                 >
                   <item.icon className="h-5 w-5" />
-                  {item.name}
+                  {t(item.key)}
                 </Link>
               )
             })}
@@ -78,7 +84,7 @@ export function Sidebar() {
 
           {/* Footer */}
           <div className="px-6 py-4 border-t border-sidebar-border">
-            <p className="text-xs text-sidebar-foreground/60">Version 1.0.0</p>
+            <p className="text-xs text-sidebar-foreground/60">{t("version")} 1.0.0</p>
           </div>
         </div>
       </div>

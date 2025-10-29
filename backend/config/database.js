@@ -26,7 +26,7 @@ let pool = null;
 
 async function getConnection() {
   try {
-    if (pool) {
+    if (pool && pool.connected) {
       return pool;
     }
 
