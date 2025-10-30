@@ -10,7 +10,6 @@ export const translations = {
     alerts: "Alerts",
     scanner: "Barcode Scanner",
     employees: "Employees",
-    congatec: "Congatec",
     settings: "Settings",
 
     // Branding
@@ -144,7 +143,6 @@ export const translations = {
     alerts: "การแจ้งเตือน",
     scanner: "สแกนบาร์โค้ด",
     employees: "พนักงาน",
-    congatec: "คองเท็ค",
     settings: "ตั้งค่า",
 
     // Branding
