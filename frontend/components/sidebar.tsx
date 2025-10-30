@@ -5,7 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Package, BarChart3, History, AlertTriangle, Settings, Menu, X, Warehouse, Scan, Users } from "lucide-react"
+import { Package, BarChart3, History, AlertTriangle, Settings, Menu, X, Warehouse, Scan, Users, Cpu } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
 import { LanguageToggle } from "./language-toggle"
 import { useLanguage } from "@/contexts/language-context"
@@ -18,6 +18,7 @@ const navigationKeys = [
   { key: "alerts" as const, href: "/alerts", icon: AlertTriangle },
   { key: "employees" as const, href: "/employees", icon: Users },
   { key: "scanner" as const, href: "/scanner", icon: Scan },
+  { key: "congatec" as const, href: "/congatec", icon: Cpu },
   { key: "settings" as const, href: "/settings", icon: Settings },
 ]
 
