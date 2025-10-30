@@ -81,18 +81,18 @@ export function CongatecIssuance({ onIssuePart }: CongatecIssuanceProps) {
     setSearching(true)
     
     try {
-      // In real implementation, this would call API
-      const response = await fetch(`/api/parts/search?q=${scannedCode}`)
+      // Search for Congatec parts only
+      const response = await fetch(`/api/parts/search?q=${scannedCode}&category=Congatec`)
       const data = await response.json()
       
       if (data.length > 0) {
         setPartData(data[0])
       } else {
-        alert("Part not found")
+        alert("Congatec part not found")
       }
     } catch (error) {
       console.error("Search error:", error)
-      alert("Error searching for part")
+      alert("Error searching for Congatec part")
     } finally {
       setSearching(false)
     }
