@@ -62,11 +62,15 @@ export function PartsTable() {
             <TableHeader>
               <TableRow>
                 <TableHead>Image</TableHead>
-                <TableHead>Part Number</TableHead>
+                <TableHead>No.</TableHead>
+                <TableHead>Spare Name</TableHead>
                 <TableHead>Description</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Department</TableHead>
+                <TableHead>Congatec Part No.</TableHead>
+                <TableHead>Where Used</TableHead>
                 <TableHead>Location</TableHead>
+                <TableHead>Total</TableHead>
+                <TableHead>Change Rate</TableHead>
+                <TableHead>Photo</TableHead>
                 <TableHead>Stock</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
@@ -75,7 +79,7 @@ export function PartsTable() {
             <TableBody>
               {filteredParts.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={13} className="text-center py-8 text-muted-foreground">
                     No parts found matching your filters
                   </TableCell>
                 </TableRow>
@@ -97,26 +101,15 @@ export function PartsTable() {
                       </div>
                     )}
                   </TableCell>
-                  <TableCell className="font-mono text-sm">{part.part_number}</TableCell>
-                  <TableCell className="font-medium">{part.description}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Tag className="h-3 w-3 text-muted-foreground" />
-                      {part.category}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Building2 className="h-3 w-3 text-muted-foreground" />
-                      {part.department}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <MapPin className="h-3 w-3 text-muted-foreground" />
-                      {part.location}
-                    </div>
-                  </TableCell>
+                  <TableCell className="font-mono text-xs">{(part as any).row_number || ''}</TableCell>
+                  <TableCell className="font-medium">{(part as any).spare_name || ''}</TableCell>
+                  <TableCell className="text-sm">{part.description || ''}</TableCell>
+                  <TableCell className="font-mono text-xs">{part.storage_detail || ''}</TableCell>
+                  <TableCell className="text-sm max-w-xs truncate">{(part as any).machine_used || ''}</TableCell>
+                  <TableCell className="text-sm">{part.location || ''}</TableCell>
+                  <TableCell className="font-medium text-center">{part.current_stock}</TableCell>
+                  <TableCell className="text-sm">{(part as any).change_rate || ''}</TableCell>
+                  <TableCell className="text-sm">{(part as any).photo || ''}</TableCell>
                   <TableCell>
                     {editingStock === part.part_id ? (
                       <div className="flex items-center gap-2">
